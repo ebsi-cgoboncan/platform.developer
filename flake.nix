@@ -17,18 +17,7 @@
       inherit (home-manager) darwinModules;
       inherit (home-manager.lib) homeManagerConfiguration;
       username = "cgoboncan";
-      home = { pkgs, ... }:
-        {
-          home.stateVersion = "23.11";
-          home.username = username;
-          programs.direnv = {
-            enable = true;
-            nix-direnv.enable = true;
-          };
-          home.packages = with pkgs; [
-            nodejs
-          ];
-        };
+      stateVersion = "23.11";
     in
     {
       darwinConfigurations =
@@ -40,19 +29,53 @@
               {
                 home-manager.useGlobalPkgs = true;
                 home-manager.useUserPackages = true;
-                home-manager.users.${username} = home;
+                home-manager.users.${username} = { pkgs, ... }:
+                  {
+                    home = {
+                      stateVersion = stateVersion;
+                      username = username;
+
+                      packages = with pkgs; [
+                        nodejs
+                      ];
+                    };
+
+                    programs = {
+                      direnv = {
+                        enable = true;
+                        nix-direnv.enable = true;
+                      };
+                    };
+                  };
               }
             ];
           };
         };
       homeConfigurations =
         {
-          "<your.username>" =
-            homeManagerConfiguration {
-              system = "x86_64-linux";
-
+          ${username} =
+            homeManagerConfiguration rec {
+              pkgs = nixpkgs.legacyPackages.x86_64-linux;
               modules = [
-                home
+                {
+                  home = {
+                    stateVersion = stateVersion;
+                    username = username;
+                    homeDirectory = "/home/${username}";
+
+                    packages = with pkgs; [
+                      nodejs
+                    ];
+                  };
+
+                  programs = {
+                    direnv = {
+                      enable = true;
+                      nix-direnv.enable = true;
+                    };
+                    home-manager.enable = true;
+                  };
+                }
               ];
             };
         };
