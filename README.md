@@ -8,7 +8,7 @@ https://github.com/DeterminateSystems/nix-installer
 Create a private repo in your github account named `dotfiles`.
 Clone your repo into your home directory.
 
-Refer to the `flake.nix` file for the contents of your file. Update the `flake.nix` file
+Refer to the `flake.nix` file for the contents of your file. Update the `flake.nix` file based on your machine settings.
 
 # macOS Hostname
 
@@ -30,7 +30,7 @@ and restart your terminal session.
 
 ```
 nix build .#darwinConfigurations.<your.hostname>.system
-./result/sw/bin/dawrin-rebuild switch --flake .
+./result/sw/bin/darwin-rebuild switch --flake .
 ```
 
 ## WSL
