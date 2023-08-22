@@ -8,12 +8,11 @@ https://github.com/DeterminateSystems/nix-installer
 Create a private repo in your github account named `dotfiles`.
 Clone your repo into your home directory.
 
-Refer to the flake.nix file for the contents of your file.
+Refer to the `flake.nix` file for the contents of your file. Update the `flake.nix` file
 
 # macOS Hostname
 
-Your hostname will change when you start a new session, so to preven this add
-the following in your .zshrc:
+Your hostname will change when you start a new session, so to prevent this add the following in your .zshrc:
 
 ```
 hostname=$(scutil --get HostName)
