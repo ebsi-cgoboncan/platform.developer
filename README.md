@@ -6,23 +6,17 @@ https://github.com/DeterminateSystems/nix-installer
 # Dotfiles setup
 
 Create a private repo in your github account named `dotfiles`.
-Clone your repo into your home directory.
+Clone your repo into your home directory using the following command
+
+```
+git clone git@github.com:<your.github.account>/dotfiles ~/.dotfiles
+```
+
+```
+cd ~/.dotfiles
+```
 
 Refer to the `flake.nix` file for the contents of your file. Update the `flake.nix` file based on your machine settings.
-
-# macOS Hostname
-
-Your hostname will change when you start a new session, so to prevent this add the following in your .zshrc:
-
-```
-hostname=$(scutil --get HostName)
-if [ -z "$hostname" ]
-then
-    scutil --set HostName <your.hostname>
-fi
-```
-
-and restart your terminal session.
 
 # Build your config
 
@@ -30,6 +24,9 @@ and restart your terminal session.
 
 ```
 nix build .#darwinConfigurations.<your.hostname>.system
+```
+
+```
 ./result/sw/bin/darwin-rebuild switch --flake .
 ```
 
@@ -37,6 +34,9 @@ nix build .#darwinConfigurations.<your.hostname>.system
 
 ```
 nix build .#homeConfigurations.<your.username>.activationPackage
+```
+
+```
 ./result/home-path/bin/home-manager switch --flake .
 ```
 
