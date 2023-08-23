@@ -17,114 +17,90 @@
       inherit (home-manager) darwinModules;
       inherit (home-manager.lib) homeManagerConfiguration;
       username = "cgoboncan";
-      stateVersion = "23.11";
-    in
-    {
-      darwinConfigurations =
-        let
-          hostname = "HL-MBP-CarlosG";
-          system = "aarch64-darwin"; # or x86_64-darwin
+      hostname = "HL-MBP-CarlosG";
+      system = "aarch64-darwin"; # or x86_64-darwin
 
-          configuration =
-            { pkgs, ... }:
-            {
-              users.users.${username} = {
-                home = "/Users/${username}";
-                shell = pkgs.zsh;
-              };
-              environment.shells = with pkgs; [ zsh ];
-              services.nix-daemon.enable = true;
-
-              nix.settings.substituters = [ "https://cache.nixos.org/" ];
-              nix.settings.trusted-public-keys = [ "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY=" ];
-              nix.settings.trusted-users = [ "@admin" ];
-              nix.configureBuildUsers = true;
-              nix.extraOptions = ''
-                		keep-outputs = true
-                    keep-derivations = true
-                    auto-optimise-store = true'';
-            };
-
-          home =
-            { pkgs, ... }:
-            {
-              home = {
-                stateVersion = stateVersion;
-                username = username;
-
-                packages = with pkgs; [
-                  nodejs
-                ];
-              };
-
-              programs = {
-                direnv = {
-                  enable = true;
-                  enableZshIntegration = true;
-                  nix-direnv.enable = true;
-                };
-                zsh = {
-                  enable = true;
-
-                  shellAliases = {
-                    "dr-switch" = "darwin-rebuild switch --flake ~/.dotfiles";
-                    "emp" = "empyrean";
-                  };
-
-                  initExtraFirst = ''
-                    hostname=$(scutil --get HostName)
-                    if [ -z "$hostname" ]
-                    then
-                      scutil --set HostName ${hostname}.local
-                    fi'';
-
-                  initExtra = ''
-                    # your zshrc goes here.
-                  '';
-                };
-              };
-            };
-        in
+      # nix-darwin configuration options can be found at:
+      # https://daiderd.com/nix-darwin/manual/index.html
+      nixDarwinConfig =
+        { pkgs, ... }:
         {
-          ${hostname} = darwinSystem {
-            system = system;
-            modules = [
-              darwinModules.home-manager
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-                home-manager.users.${username} = home;
-              }
-            ];
+          nix.settings.experimental-features = "nix-command flakes"; 
+          nix.extraOptions = ''auto-optimise-store = true'';
+          # autoupgrade nix when flake.lock is updated
+          nix.package = pkgs.nix;
+
+          nixpkgs.hostPlatform = system;
+
+          # required for nix-darwin to manage zshrc files in /etc 
+          programs.zsh.enable = true; 
+
+          services.nix-daemon.enable = true;
+
+          system.configurationRevision = self.rev or self.dirtyRev or null;
+          system.stateVersion = 4;
+
+          users.users.${username} = {
+            home = "/Users/${username}";
+            shell = pkgs.zsh;
           };
         };
-      homeConfigurations =
+
+      # home-manager configuration options can be found at:
+      # https://nix-community.github.io/home-manager/options.html
+      homeManagerConfig =
+        { pkgs, ... }:
         {
-          ${username} =
-            homeManagerConfiguration rec {
-              pkgs = nixpkgs.legacyPackages.x86_64-linux;
-              modules = [
-                {
-                  home = {
-                    stateVersion = stateVersion;
-                    username = username;
-                    homeDirectory = "/home/${username}";
+          home = {
+            stateVersion = "23.11";
+            username = username;
 
-                    packages = with pkgs; [
-                      nodejs
-                    ];
-                  };
+            # Packages outside of home-manager can be found at:
+            # https://search.nixos.org/packages
+            packages = with pkgs; [ ];
+          };
 
-                  programs = {
-                    direnv = {
-                      enable = true;
-                      nix-direnv.enable = true;
-                    };
-                    home-manager.enable = true;
-                  };
-                }
-              ];
+          programs = {
+            direnv = {
+              enable = true;
+              enableZshIntegration = true;
+              nix-direnv.enable = true;
             };
+
+            home-manager = {
+              enable = true;
+            };
+
+            # this is required to enable direnv integration. 
+            zsh = {
+              enable = true;
+
+              shellAliases = {
+                "dr-switch" = "darwin-rebuild switch --flake ~/.config/nix-darwin";
+                # alias for the empyrean cli
+                "emp" = "empyrean";
+              };
+
+              initExtra = ''
+                # your zshrc goes here.
+              '';
+            };
+          };
         };
+    in
+    {
+      darwinConfigurations.${hostname} = darwinSystem {
+        system = system;
+        modules = [
+          nixDarwinConfig
+          darwinModules.home-manager
+          {
+            home-manager.useGlobalPkgs = true;
+            home-manager.useUserPackages = true;
+            home-manager.backupFileExtension = "nix-backup";
+            home-manager.users.${username} = homeManagerConfig;
+          }
+        ];
+      };
     };
 }
