@@ -88,15 +88,17 @@
                 hostname=$(scutil --get HostName)
                 if [ -z "$hostname" ]
                 then
-                    scutil --set HostName <your.hostname>
+                    scutil --set HostName ${hostname}.local 
                 fi
               '';
 
               initExtra = ''
-                # your zshrc goes here.
+                source $HOME/.config/zsh/default.zsh 
               '';
             };
           };
+
+          xdg.configFile.zsh.source = ./zsh;
         };
     in
     {

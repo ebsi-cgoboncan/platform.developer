@@ -17,11 +17,11 @@ cd ~/.config/nix-darwin
 ```
 
 - Create a nix flake file using `touch flake.nix`. Then copy the contents of `flake.nix` into your `flake.nix`.
-- Create folder called `zsh` and create a new file called `default.zsh`. Copy the contents of your `~/.zshrc` file to `default.zsh`.
+
+- Create folder called `zsh` and copy your your .
 - Update the `flake.nix` file based on your machine settings.
-- Copy your .zshrc contents to programs.zsh.initExtra.
 - Stage your file changes in `git`.
-- If your hostname is not defined, i.e. the `hostname` command returns an empty string, then temporarily set your hostname with `scutil ---set LocalHostName "<your.hostname>"`. Your host name must match your computer name otherwise you will not be able to log into the VPN. To get your computer name, use `scutil --get ComputerName`.
+- If your hostname is not defined, i.e. the `hostname` command returns an empty string, then temporarily set your hostname with `scutil --set HostName "<your.hostname>.local"`. Your host name must match your computer name otherwise you will not be able to log into the VPN. To get your computer name, use `scutil --get ComputerName`.
 
 # Build your config
 
