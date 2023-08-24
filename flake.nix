@@ -84,14 +84,6 @@
                 "emp" = "empyrean";
               };
 
-              initExtraFirst = ''
-                hostname=$(scutil --get HostName)
-                if [ -z "$hostname" ]
-                then
-                    scutil --set HostName ${hostname}.local 
-                fi
-              '';
-
               initExtra = ''
                 source $HOME/.config/zsh/default.zsh 
               '';

@@ -1,5 +1,2 @@
-$XDG_CACHE_HOME
 .DS_Store
-.luarc.json
 result
-node_modules
