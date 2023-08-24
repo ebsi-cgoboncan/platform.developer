@@ -11,11 +11,12 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = { nixpkgs, home-manager, darwin, ... }:
+  outputs = inputs@{ self, nixpkgs, home-manager, darwin, ... }:
     let
       inherit (darwin.lib) darwinSystem;
       inherit (home-manager) darwinModules;
       inherit (home-manager.lib) homeManagerConfiguration;
+
       username = "cgoboncan";
       hostname = "HL-MBP-CarlosG";
       system = "aarch64-darwin"; # or x86_64-darwin
@@ -25,15 +26,17 @@
       nixDarwinConfig =
         { pkgs, ... }:
         {
-          nix.settings.experimental-features = "nix-command flakes"; 
+          nix.settings.experimental-features = "nix-command flakes";
           nix.extraOptions = ''auto-optimise-store = true'';
           # autoupgrade nix when flake.lock is updated
           nix.package = pkgs.nix;
 
           nixpkgs.hostPlatform = system;
 
+          networking.localHostName = hostname;
+
           # required for nix-darwin to manage zshrc files in /etc 
-          programs.zsh.enable = true; 
+          programs.zsh.enable = true;
 
           services.nix-daemon.enable = true;
 
@@ -80,6 +83,14 @@
                 # alias for the empyrean cli
                 "emp" = "empyrean";
               };
+
+              initExtraFirst = ''
+                hostname=$(scutil --get HostName)
+                if [ -z "$hostname" ]
+                then
+                    scutil --set HostName <your.hostname>
+                fi
+              '';
 
               initExtra = ''
                 # your zshrc goes here.
