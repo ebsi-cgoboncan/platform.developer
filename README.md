@@ -28,6 +28,8 @@ Copy the `.gitignore` file from this repo into your `nix-darwin` folder.
 
 - Create folder called `zsh` and copy your your `.zshrc` over to a file named `default.zsh`.
 
+> Review the contents of default.zsh and remove any unneeded settings.
+
 ```
 mkdir -p ~/.config/nix-darwin/zsh
 cp ~/.zshrc ~/.config/nix-darwin/zsh/default.zsh
@@ -39,7 +41,7 @@ cp ~/.zshrc ~/.config/nix-darwin/zsh/default.zsh
 
 # Build your config
 
-Before you build your config, stage your
+Before you build your config, stage your changes to your git repo. You do not need to commit the changes before you build, but you should commit them once you get a successful build. This will let you rollback your config changes if something catastrophic happens.
 To bootstrap nix-darwin, use the command:
 
 ```
