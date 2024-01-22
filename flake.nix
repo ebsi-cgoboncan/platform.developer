@@ -85,7 +85,7 @@
               };
 
               initExtra = ''
-                source $HOME/.config/zsh/default.zsh 
+                source $HOME/.config/nix-darwin/zsh/default.zsh 
               '';
             };
           };
