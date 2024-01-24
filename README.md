@@ -131,6 +131,6 @@ Then uninstall nix using the nix-installer:
 
 - [Zero-to-nix](https://zero-to-nix.com/)
 - [Home manager](https://nix-community.github.io/home-manager/)
-- [Home manager options](https://nix-community.github.io/home-manager/options.html)
+- [Home manager options](https://nix-community.github.io/home-manager/options.xhtml)
 - [nix-darwin](https://daiderd.com/nix-darwin/manual/index.html)
 - [direnv](https://direnv.net/)
