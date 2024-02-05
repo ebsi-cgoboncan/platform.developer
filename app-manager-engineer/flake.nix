@@ -6,20 +6,28 @@
     flake-utils.url = github:numtide/flake-utils;
     nix-filter.url = github:numtide/nix-filter;
 
+    devshell = {
+      url = github:numtide/devshell;
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.flake-utils.follows = "flake-utils";
+    };
+
     enspire-pkgs = {
       url = github:ebsi-epd/service.benefitgo/dev;
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
+      inputs.nix-filter.follows = "nix-filter";
     };
 
     android-nixpkgs = {
       url = github:tadfisher/android-nixpkgs;
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.devshell.follows = "devshell";
       inputs.flake-utils.follows = "flake-utils";
     };
   };
 
-  outputs = { self, nixpkgs, flake-utils, nix-filter, enspire-pkgs, android-nixpkgs }:
+  outputs = { self, nixpkgs, flake-utils, nix-filter, enspire-pkgs, android-nixpkgs, ... }:
     flake-utils.lib.eachDefaultSystem (system:
       let
         pkgs = nixpkgs.legacyPackages.${system};
