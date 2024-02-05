@@ -1,0 +1,14 @@
+function keychain-env () {
+  case $1 in
+    get ) 
+      var_name="${2}"
+      security find-generic-password -w -a ${USER} -D "environment variable" -s "${var_name}"
+      ;;
+    set )   
+      var_name="${2}"
+      secret="${3}"
+      security add-generic-password -U -a ${USER} -D "environment variable" -s "${var_name}" -w "${secret}"
+      ;;
+  esac
+}
+
