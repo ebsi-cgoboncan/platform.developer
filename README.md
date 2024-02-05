@@ -98,9 +98,19 @@ use flake
 
 After you enter to command above, you should see a message like
 
-> direnv: error <path.info>/empyrean/mobile/empyreango/.envrc is blocked. Run `direnv allow` to approve its content
+> direnv: error \<path.info>/empyrean/mobile/empyreango/.envrc is blocked. Run `direnv allow` to approve its content
 
 Type in `direnv allow` into y our prompt to activate direnv for EmpyreanGO and wait for nix to build the configuration.
+
+# Dependencies
+
+To install packages that are not exposed as a home-manager option, search for the package on nix search and add the package to list with an attribute path of `home.packages` in the `homeManagerConfig` function.
+e.g. `go dotnet-sdk_8 nodejs_21`. Note: Elements in a list are separated by a space, so no punctuation such as commas are needed.
+
+# Multiple dotnet sdks
+
+Since multiple versions of dotnet can be installed onto your system, we need to combine the dotnet SDKs and runtimes into a single package if we want to have multiple version installed. To create the combined sdk,
+add `./packages/dotnet` to the list of  `homeManagerConfig.imports`.
 
 # Uninstall
 

@@ -60,7 +60,7 @@
 
             # Packages outside of home-manager can be found at:
             # https://search.nixos.org/packages
-            packages = with pkgs; [ ];
+            packages = with pkgs; [ ]; # add `dotnet-sdk_8` to the list here.
           };
 
           programs = {
@@ -89,6 +89,9 @@
               '';
             };
           };
+          imports = [
+            #./packages/dotnet
+          ];
 
           xdg.configFile.zsh.source = ./zsh;
         };
