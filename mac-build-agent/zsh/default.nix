@@ -1,16 +1,20 @@
-{ pkgs, ... }: 
+{ pkgs, ... }:
 {
   programs.zsh = {
     enable = true;
 
+    enableAutosuggestions = true;
+    syntaxHighlighting.enable = true;
+    enableCompletion = true;
+
     shellAliases = {
       "dr-switch" = "darwin-rebuild switch --flake ~/workspace/github/platform.developer/mac-build-agent";
-       # alias for the empyrean cli
-       "emp" = "empyrean";
+      # alias for the empyrean cli
+      "emp" = "empyrean";
     };
 
     initExtra = ''
-	    source $HOME/.config/zsh/default.zsh
+      source ${pkgs.zsh-vi-mode}/share/zsh-vi-mode/zsh-vi-mode.plugin.zsh
     '';
   };
 
