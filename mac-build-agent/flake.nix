@@ -17,7 +17,8 @@
       inherit (home-manager) darwinModules;
       inherit (home-manager.lib) homeManagerConfiguration;
 
-      username = "svc_teamcityagent";
+      teamcityUsername = "svc_teamcityagent";
+      appmanagerengineerUsername = "appmanagerengineer";
       hostname = "hw-mbmdev";
       system = "x86_64-darwin";
 
@@ -32,7 +33,7 @@
             (nerdfonts.override { fonts = [ "FiraCode" "JetBrainsMono" "NerdFontsSymbolsOnly" ]; })
           ];
 
-          nix.settings.experimental-features = "nix-command flakes"; 
+          nix.settings.experimental-features = "nix-command flakes";
           nix.extraOptions = ''auto-optimise-store = true'';
           # autoupgrade nix when flake.lock is updated
           nix.package = pkgs.nix;
@@ -40,7 +41,7 @@
           nixpkgs.hostPlatform = system;
 
           # required for nix-darwin to manage zshrc files in /etc 
-          programs.zsh.enable = true; 
+          programs.zsh.enable = true;
 
           services.nix-daemon.enable = true;
 
@@ -48,12 +49,12 @@
           system.stateVersion = 4;
 
           users.users = {
-            "${username}" = {
-              home = "/Users/${username}";
+            "${teamcityUsername}" = {
+              home = "/Users/${teamcityUsername}";
               shell = pkgs.zsh;
             };
-            "appmanagerengineer" = {
-              home = "/Users/appmanagerengineer";
+            "${appmanagerengineerUsername}" = {
+              home = "/Users/${appmanagerengineerUsername}";
               shell = pkgs.zsh;
             };
           };
@@ -61,16 +62,16 @@
 
       # home-manager configuration options can be found at:
       # https://nix-community.github.io/home-manager/options.html
-      homeManagerConfig =
+      teamcityConfig =
         { pkgs, lib, config, ... }:
         {
           home = {
             stateVersion = "23.11";
-            username = username;
+            username = teamcityUsername;
 
             # Packages outside of home-manager can be found at:
             # https://search.nixos.org/packages
-            packages = with pkgs; [ 
+            packages = with pkgs; [
               yarn
               nodejs_18
               jdk17
@@ -93,29 +94,22 @@
           };
         };
 
-      appManagerConfig = 
+      appManagerConfig =
         { pkgs, lib, config, ... }:
         {
           home = {
             stateVersion = "23.11";
-            username = "appmanagerengineer";
-            
+            username = "${appmanagerengineerUsername}";
+
             packages = with pkgs; [ ];
           };
 
-        imports = [
-          ./starship
-          ./zsh
-        ];
-
-        programs = {
-          direnv = {
-            enable = true;
-            enableZshIntegration = true;
-            nix-direnv.enable = true;
-          };
+          imports = [
+            ./starship
+            ./direnv
+            ./zsh
+          ];
         };
-      };
     in
     {
       darwinConfigurations.${hostname} = darwinSystem {
@@ -127,8 +121,8 @@
             home-manager.useGlobalPkgs = true;
             home-manager.useUserPackages = true;
             home-manager.backupFileExtension = "nix-backup";
-            home-manager.users.${username} = homeManagerConfig;
-            home-manager.users.appmanagerengineer = appManagerConfig;
+            home-manager.users.${teamcityUsername} = teamcityConfig;
+            home-manager.users.${appmanagerengineerUsername} = appManagerConfig;
           }
         ];
       };
