@@ -105,8 +105,10 @@
           };
 
           imports = [
-            ./starship
             ./direnv
+            ./nvim
+            ./starship
+            ./tmux
             ./zsh
           ];
         };
