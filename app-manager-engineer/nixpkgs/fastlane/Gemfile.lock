@@ -1,7 +1,4 @@
 GEM
-  specs:
-
-GEM
   remote: https://rubygems.org/
   specs:
     CFPropertyList (3.0.6)
@@ -212,10 +209,11 @@ GEM
 
 PLATFORMS
   arm64-darwin-22
+  x86_64-darwin-22
 
 DEPENDENCIES
-  fastlane!
-  pry!
+  fastlane
+  pry
 
 BUNDLED WITH
    2.3.26
